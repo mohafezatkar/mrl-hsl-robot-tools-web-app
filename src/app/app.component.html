@@ -1,21 +1,53 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{title}}!
-  </h1>
-  <img width="300" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
-</div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://github.com/angular/angular-cli/wiki">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
+<button md-raised-button color="primary" (click)="getConfigData()">Get Token</button>
+<button md-raised-button color="warn" (click)="onInputChange()">Submit</button>
 
-<router-outlet></router-outlet>
+<md-tab-group>
+
+  <md-tab label = "Config-OP">
+    <md-list *ngFor="let config of configData;let i=index">
+      <md-form-field *ngIf = "config.tag === 0 && config.fileAddress === 0">
+        <input mdInput [(ngModel)]="this.config.value" placeholder="{{this.config.key}}">
+      </md-form-field>
+      <md-form-field *ngIf = "config.tag === 1 && config.fileAddress === 0">
+        <input mdInput [(ngModel)]="this.config.value" placeholder="{{this.config.key}}">
+      </md-form-field>
+      <md-checkbox *ngIf = "config.tag === 2 && config.fileAddress === 0" [checked]="this.config.value" [(ngModel)]="this.config.value" >
+        {{this.config.key}}
+      </md-checkbox >
+      <md-form-field *ngIf = "config.tag === 3  && config.fileAddress === 0">
+        <input mdInput [(ngModel)]="this.config.value" placeholder="{{this.config.key}}">
+      </md-form-field>
+      <md-select *ngIf = "config.tag === 4 && config.fileAddress === 0" placeholder="{{this.config.key}}" [(ngModel)]="this.currentValue[this.i]">
+        <md-option  *ngFor="let count of this.optionValue[this.i]" [value] = "count">
+          {{count}}
+        </md-option>
+      </md-select>
+    </md-list>
+  </md-tab>
+  <!--*ngFor="let food of this.counter2 | slice:start[:end]"-->
+  <md-tab label = "Config OP World">
+  </md-tab>
+  <md-tab label = "Config OP Vision">
+  </md-tab>
+</md-tab-group>
+
+<!--[value]=this.currentValue[i]-->
+<!--<form (ngSubmit)="onPost(f)" #f="ngForm">-->
+  <!--<md-checkbox ngModel name="key">Check me!</md-checkbox>-->
+  <!--<button md-raised-button color="primary" type="submit">Get</button>-->
+  <!--<md-list *ngFor="let config of configData">-->
+    <!--<md-form-field *ngIf="config.tag === 0 && config.fileAddress === 0">-->
+      <!--<input mdInput ngModel name = "key" placeholder = "{{config.value}}" >-->
+      <!--&lt;!&ndash;{{config.value}}&ndash;&gt;-->
+    <!--</md-form-field>-->
+
+
+    <!--<md-form-field>-->
+    <!--<input mdInput placeholder="Favorite food" value="Sushi" ngModel name="test">-->
+  <!--</md-form-field>-->
+  <!--<md-form-field>-->
+    <!--<input mdInput placeholder="Favorite food" value="Sushi" ngModel name="tes2t">-->
+  <!--</md-form-field>-->
+
+  <!--</md-list>-->
+<!--</form>-->
