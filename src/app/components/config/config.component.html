@@ -1,0 +1,30 @@
+<div style="text-align:center;">
+  <button mat-raised-button color="primary" (click)="getConfigData()">Get Config</button>
+  <button mat-raised-button color="warn" (click)="onInputChange()">Submit</button>
+</div>
+<br>
+<mat-tab-group>
+  <mat-tab *ngFor="let config of configData;let i=index" label = {{this.configData[i][0].fileName}}>
+    <mat-list class="border" *ngFor="let configurate of configData[i];let j=index">
+      <mat-form-field *ngIf = "this.config[j].tag === 0">
+        <input matInput [(ngModel)]="this.config[j].value" placeholder="{{this.config[j].key}}">
+      </mat-form-field>
+      <mat-form-field *ngIf = "this.config[j].tag === 1">
+        <input matInput [(ngModel)]="this.config[j].value" placeholder="{{this.config[j].key}}">
+      </mat-form-field>
+      <mat-checkbox *ngIf = "this.config[j].tag === 2" [checked]="this.config[j].value" [(ngModel)]="this.config[j].value" >
+        {{this.config[j].key}}
+      </mat-checkbox >
+      <mat-form-field *ngIf = "this.config[j].tag === 3">
+        <input matInput [(ngModel)]="this.config[j].value" placeholder="{{this.config[j].key}}">
+      </mat-form-field>
+      <mat-form-field *ngIf = "this.config[j].tag === 4">
+      <mat-select placeholder="{{this.config[j].key}}" [(ngModel)]="this.currentValue[this.j]">
+        <mat-option  *ngFor="let count of this.optionValue[this.j]" [value] = "count">
+          {{count}}
+        </mat-option>
+      </mat-select>
+      </mat-form-field>
+    </mat-list>
+  </mat-tab>
+</mat-tab-group>
