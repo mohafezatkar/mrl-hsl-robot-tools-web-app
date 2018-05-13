@@ -33,6 +33,8 @@ export class MonitorComponent implements OnInit, AfterViewInit {
 
 
   constructor() {
+    setInterval(() => {
+      this.gettime(); }, 4000);
     this.ws.onClose(
       () => {
         console.log('WebSocket Closed');
@@ -42,6 +44,7 @@ export class MonitorComponent implements OnInit, AfterViewInit {
     );
     this.ws.onMessage(
       (msg: MessageEvent) => {
+        // console.log(msg.data);
         const Time = new Date();
         this.monitorData = [];
         this.monitorData.push(JSON.parse(msg.data));
@@ -64,16 +67,12 @@ export class MonitorComponent implements OnInit, AfterViewInit {
           this.monitorNames.push(this.monitorData[0].robotName);
         }
       });
+
   }
 
   ngAfterViewInit() {
-    this.fieldImage.src = '../../../assets/img/Soccer%20Field.png';
-    this.xsize = this.fieldImage.height / 2;
-    this.ysize = this.fieldImage.width / 2;
     this.fieldContext = this.field.nativeElement.getContext('2d');
-    this.fieldImage.onload = () => {
-      this.fieldContext.drawImage(this.fieldImage, 0, 0, this.fieldImage.width, this.fieldImage.height);
-    };
+    this.drawField();
   }
 
   ngOnInit() {
@@ -129,15 +128,17 @@ export class MonitorComponent implements OnInit, AfterViewInit {
   }
 
   position() {
-    this.fieldContext.clearRect(0, 0, this.fieldImage.width, this.fieldImage.height);
-    this.fieldContext.drawImage(this.fieldImage, 0, 0, this.fieldImage.width, this.fieldImage.height);
+    const width = 540;
+    const height = 360;
+    this.fieldContext.clearRect(0, 0, width, height);
+    this.drawField();
     for (let i = 0; i < this.monitorIDs.length; i++) {
-      const xAngle = (this.monitorX[i] * this.fieldImage.width / 2) / 4.5 + this.fieldImage.width / 2 + 20 * Math.cos(this.monitorA[i]);
-      const yAngle = this.fieldImage.height / 2 - (this.monitorY[i] * this.fieldImage.height / 2) / 3 - 20 * Math.sin(this.monitorA[i]);
+      const xAngle = (this.monitorX[i] * width / 2) / 4.5 + width / 2 + 20 * Math.cos(this.monitorA[i]);
+      const yAngle = height / 2 - (this.monitorY[i] * height / 2) / 3 - 20 * Math.sin(this.monitorA[i]);
       const ca = Math.cos(this.monitorA[i]);
       const sa = Math.sin(this.monitorA[i]);
-      const xGlobal = (this.monitorX[i] * this.fieldImage.width / 2) / 4.5 + this.fieldImage.width / 2  + ca * this.monitorxBall[i] - sa * this.monitoryBall[i];
-      const yGlobal = this.fieldImage.height / 2 - (this.monitorY[i] * this.fieldImage.height / 2) / 3 - sa * this.monitorxBall[i] - ca * this.monitoryBall[i];
+      const xGlobal = (this.monitorX[i] * width / 2) / 4.5 + width / 2  + ca * this.monitorxBall[i] - sa * this.monitoryBall[i];
+      const yGlobal = height / 2 - (this.monitorY[i] * height / 2) / 3 - sa * this.monitorxBall[i] - ca * this.monitoryBall[i];
       if (this.monitorRole[i] === 0) {
         this.fieldContext.fillStyle = 'white';
       }
@@ -153,7 +154,6 @@ export class MonitorComponent implements OnInit, AfterViewInit {
       if (this.monitorpBall[i].toString().includes('e')){
         console.log('NO BALL');
       }
-
       else {
         this.fieldContext.globalAlpha = this.monitorpBall[i];
         this.fieldContext.beginPath();
@@ -165,15 +165,108 @@ export class MonitorComponent implements OnInit, AfterViewInit {
 
       this.fieldContext.beginPath();
       this.fieldContext.globalAlpha = 1.0;
-      this.fieldContext.arc((this.monitorX[i] * this.fieldImage.width / 2) / 4.5 + this.fieldImage.width / 2,  this.fieldImage.height / 2 - (this.monitorY[i] * this.fieldImage.height / 2) / 3 , 10, 0, 2 * Math.PI);
+      this.fieldContext.arc((this.monitorX[i] * width / 2) / 4.5 + width / 2,  height / 2 - (this.monitorY[i] * height / 2) / 3 , 10, 0, 2 * Math.PI);
       this.fieldContext.fill();
       this.fieldContext.beginPath();
-      this.fieldContext.moveTo((this.monitorX[i] * this.fieldImage.width / 2) / 4.5 + this.fieldImage.width / 2, this.fieldImage.height / 2 - (this.monitorY[i] * this.fieldImage.height / 2) / 3);
+      this.fieldContext.moveTo((this.monitorX[i] * width / 2) / 4.5 + width / 2, height / 2 - (this.monitorY[i] * height / 2) / 3);
       this.fieldContext.lineTo(xAngle, yAngle);
       this.fieldContext.stroke();
       this.fieldContext.font = '20px Arial';
       this.fieldContext.fillStyle = 'black';
-      this.fieldContext.fillText(this.monitorIDs[i], (this.monitorX[i] * this.fieldImage.width / 2) / 4.5 + this.fieldImage.width / 2 - 3, this.fieldImage.height / 2 - (this.monitorY[i] * this.fieldImage.height / 2) / 3 + 7);
+      this.fieldContext.fillText(this.monitorIDs[i], (this.monitorX[i] * width / 2) / 4.5 + width / 2 - 3, height / 2 - (this.monitorY[i] * height / 2) / 3 + 7);
     }
+  }
+
+  drawField(){
+    // Outer lines
+    const width = 540;
+    const height = 360;
+    this.fieldContext.beginPath();
+    this.fieldContext.rect(0, 0, width, height);
+    this.fieldContext.fillStyle = '#060';
+    this.fieldContext.fill();
+    this.fieldContext.lineWidth = 3;
+    this.fieldContext.strokeStyle = '#FFF';
+    this.fieldContext.stroke();
+    this.fieldContext.closePath();
+
+    this.fieldContext.fillStyle = '#FFF';
+
+    // Mid line
+    this.fieldContext.beginPath();
+    this.fieldContext.moveTo(width / 2, 0);
+    this.fieldContext.lineTo(width / 2, height);
+    this.fieldContext.stroke();
+    this.fieldContext.closePath();
+
+    //Mid circle
+    this.fieldContext.beginPath();
+    this.fieldContext.arc(width / 2, height / 2, 90, 0, 2 * Math.PI, false);
+    this.fieldContext.stroke();
+    this.fieldContext.closePath();
+    //Mid point
+    this.fieldContext.beginPath();
+    this.fieldContext.arc(width / 2, height / 2, 5, 0, 2 * Math.PI, false);
+    this.fieldContext.fill();
+    this.fieldContext.closePath();
+
+
+    //Home goal box
+    this.fieldContext.beginPath();
+    this.fieldContext.rect(0, 30, 60, 300);
+    this.fieldContext.stroke();
+    this.fieldContext.closePath();
+    // Home goal
+    this.fieldContext.beginPath();
+    this.fieldContext.moveTo(1, (height / 2) - 22);
+    this.fieldContext.lineTo(1, (height / 2) + 22);
+    this.fieldContext.stroke();
+    this.fieldContext.closePath();
+
+    //Home penalty point
+    this.fieldContext.beginPath();
+    this.fieldContext.arc(126, height / 2, 3, 0, 2 * Math.PI, true);
+    this.fieldContext.fill();
+    this.fieldContext.closePath();
+
+    //Away goal box
+    this.fieldContext.beginPath();
+    this.fieldContext.rect(480 , 30, 60, 300);
+    this.fieldContext.stroke();
+    this.fieldContext.closePath();
+    //Away goal
+    this.fieldContext.beginPath();
+    this.fieldContext.moveTo(width - 1, (height / 2) - 22);
+    this.fieldContext.lineTo(width - 1, (height / 2) + 22);
+    this.fieldContext.stroke();
+    this.fieldContext.closePath();
+
+    //Away penalty point
+    this.fieldContext.beginPath();
+    this.fieldContext.arc(414, height / 2, 3, 0, 2 * Math.PI, true);
+    this.fieldContext.fill();
+    this.fieldContext.closePath();
+  }
+
+  gettime() {
+    const Time = new Date();
+    for (let i = 0; i < this.monitorIDs.length; i++) {
+      const checkTime = Time.getTime() - this.monitorTime[i];
+      if (checkTime > 5000) {
+        this.monitorIDs.splice(i, 1);
+        this.monitorNames.splice(i, 1);
+        this.monitorX.splice(i, 1);
+        this.monitorY.splice(i, 1);
+        this.monitorA.splice(i, 1);
+        this.monitorxBall.splice(i, 1);
+        this.monitoryBall.splice(i, 1);
+        this.monitorRole.splice(i, 1);
+        this.monitorpBall.splice(i, 1);
+        this.monitorBatteryLevels.splice(i, 1);
+        this.monitorTime.splice(i, 1);
+      }
+      this.position();
+    }
+    // Inja ke oomadi bayad Time.gettime ro menhaye arrayx ke time toosh rikhti bokoni. age timesh bishtar az 10 saniye bood oonvagh splice konesh.
   }
 }
