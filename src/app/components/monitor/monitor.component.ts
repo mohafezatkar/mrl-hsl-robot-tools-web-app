@@ -44,13 +44,12 @@ export class MonitorComponent implements OnInit, AfterViewInit {
     );
     this.ws.onMessage(
       (msg: MessageEvent) => {
-        // console.log(msg.data);
+        console.log(msg.data);
         const Time = new Date();
         this.monitorData = [];
         this.monitorData.push(JSON.parse(msg.data));
         if (this.monitorIDs.includes(this.monitorData[0].id)) {
           const monitorArrayIndex = this.monitorIDs.indexOf(this.monitorData[0].id);
-          this.string2label_rle(this.monitorData[0].sendlabelB.arr.data, monitorArrayIndex);
           this.monitorX.splice(monitorArrayIndex, 1, this.monitorData[0].pose.x);
           this.monitorY.splice(monitorArrayIndex, 1, this.monitorData[0].pose.y);
           this.monitorA.splice(monitorArrayIndex, 1, this.monitorData[0].pose.a);
@@ -61,6 +60,7 @@ export class MonitorComponent implements OnInit, AfterViewInit {
           this.monitorBatteryLevels.splice(monitorArrayIndex, 1, this.monitorData[0].battery_level);
           this.monitorTime.splice(monitorArrayIndex, 1, Time.getTime());
           this.position();
+          this.string2label_rle(this.monitorData[0].sendlabelB.arr.data, monitorArrayIndex);
         }
         else {
           this.monitorIDs.push(this.monitorData[0].id);
@@ -108,9 +108,9 @@ export class MonitorComponent implements OnInit, AfterViewInit {
     }
     contect.beginPath();
     let index = 0;
-    for (let k = 0; k < 72; k++) {
-      for (let j = 0; j < 128; j++) {
-        index = (k * 128) + j;
+    for (let k = 0; k < 60; k++) {
+      for (let j = 0; j < 80; j++) {
+        index = (k * 80) + j;
         if (this.imageArray[index] === 0) {
           contect.fillStyle = 'black';
           contect.fillRect(j, k, 1, 1);
@@ -128,17 +128,17 @@ export class MonitorComponent implements OnInit, AfterViewInit {
   }
 
   position() {
-    const width = 540;
-    const height = 360;
+    const width = 624;
+    const height = 444;
     this.fieldContext.clearRect(0, 0, width, height);
     this.drawField();
     for (let i = 0; i < this.monitorIDs.length; i++) {
-      const xAngle = (this.monitorX[i] * width / 2) / 4.5 + width / 2 + 20 * Math.cos(this.monitorA[i]);
-      const yAngle = height / 2 - (this.monitorY[i] * height / 2) / 3 - 20 * Math.sin(this.monitorA[i]);
+      const xAngle = (this.monitorX[i] * width / 2) / 5.2 + width / 2 + 20 * Math.cos(this.monitorA[i]);
+      const yAngle = height / 2 - (this.monitorY[i] * height / 2) / 3.7 - 20 * Math.sin(this.monitorA[i]);
       const ca = Math.cos(this.monitorA[i]);
       const sa = Math.sin(this.monitorA[i]);
-      const xGlobal = (this.monitorX[i] * width / 2) / 4.5 + width / 2  + ca * this.monitorxBall[i] - sa * this.monitoryBall[i];
-      const yGlobal = height / 2 - (this.monitorY[i] * height / 2) / 3 - sa * this.monitorxBall[i] - ca * this.monitoryBall[i];
+      const xGlobal = (this.monitorX[i] * width / 2) / 5.2 + width / 2  + ca * this.monitorxBall[i] - sa * this.monitoryBall[i];
+      const yGlobal = height / 2 - (this.monitorY[i] * height / 2) / 3.7 - sa * this.monitorxBall[i] - ca * this.monitoryBall[i];
       if (this.monitorRole[i] === 0) {
         this.fieldContext.fillStyle = 'white';
       }
@@ -152,7 +152,12 @@ export class MonitorComponent implements OnInit, AfterViewInit {
         this.fieldContext.fillStyle = 'blue';
       }
       if (this.monitorpBall[i].toString().includes('e')){
-        console.log('NO BALL');
+        this.fieldContext.globalAlpha = 0.1;
+        this.fieldContext.beginPath();
+        this.fieldContext.arc(xGlobal, yGlobal, 10, 0, 2 * Math.PI, true);
+        this.fieldContext.fill();
+        this.fieldContext.globalAlpha = 1.0;
+        this.fieldContext.stroke();
       }
       else {
         this.fieldContext.globalAlpha = this.monitorpBall[i];
@@ -165,24 +170,26 @@ export class MonitorComponent implements OnInit, AfterViewInit {
 
       this.fieldContext.beginPath();
       this.fieldContext.globalAlpha = 1.0;
-      this.fieldContext.arc((this.monitorX[i] * width / 2) / 4.5 + width / 2,  height / 2 - (this.monitorY[i] * height / 2) / 3 , 10, 0, 2 * Math.PI);
+      this.fieldContext.arc((this.monitorX[i] * width / 2) / 5.2 + width / 2,  height / 2 - (this.monitorY[i] * height / 2) / 3.7 , 10, 0, 2 * Math.PI);
       this.fieldContext.fill();
       this.fieldContext.beginPath();
-      this.fieldContext.moveTo((this.monitorX[i] * width / 2) / 4.5 + width / 2, height / 2 - (this.monitorY[i] * height / 2) / 3);
+      this.fieldContext.moveTo((this.monitorX[i] * width / 2) / 5.2 + width / 2, height / 2 - (this.monitorY[i] * height / 2) / 3.7);
       this.fieldContext.lineTo(xAngle, yAngle);
       this.fieldContext.stroke();
       this.fieldContext.font = '20px Arial';
       this.fieldContext.fillStyle = 'black';
-      this.fieldContext.fillText(this.monitorIDs[i], (this.monitorX[i] * width / 2) / 4.5 + width / 2 - 3, height / 2 - (this.monitorY[i] * height / 2) / 3 + 7);
+      this.fieldContext.fillText(this.monitorIDs[i], (this.monitorX[i] * width / 2) / 5.2 + width / 2 - 3.7, height / 2 - (this.monitorY[i] * height / 2) / 3.7 + 7);
     }
   }
 
   drawField(){
     // Outer lines
-    const width = 540;
-    const height = 360;
+    const width = 624;
+    const height = 444;
     this.fieldContext.beginPath();
-    this.fieldContext.rect(0, 0, width, height);
+    this.fieldContext.rect(0,0,width,height);
+    this.fieldContext.stroke();
+    this.fieldContext.rect(42, 42, width - 84, height - 84);
     this.fieldContext.fillStyle = '#060';
     this.fieldContext.fill();
     this.fieldContext.lineWidth = 3;
@@ -194,56 +201,55 @@ export class MonitorComponent implements OnInit, AfterViewInit {
 
     // Mid line
     this.fieldContext.beginPath();
-    this.fieldContext.moveTo(width / 2, 0);
-    this.fieldContext.lineTo(width / 2, height);
+    this.fieldContext.moveTo(width / 2, 42);
+    this.fieldContext.lineTo(width / 2, height - 42);
     this.fieldContext.stroke();
     this.fieldContext.closePath();
 
     //Mid circle
     this.fieldContext.beginPath();
-    this.fieldContext.arc(width / 2, height / 2, 90, 0, 2 * Math.PI, false);
+    this.fieldContext.arc(width / 2, height / 2, 45, 0, 2 * Math.PI, false);
     this.fieldContext.stroke();
     this.fieldContext.closePath();
+
     //Mid point
     this.fieldContext.beginPath();
-    this.fieldContext.arc(width / 2, height / 2, 5, 0, 2 * Math.PI, false);
+    this.fieldContext.arc(width / 2, height / 2, 3, 0, 2 * Math.PI, false);
     this.fieldContext.fill();
     this.fieldContext.closePath();
 
 
     //Home goal box
     this.fieldContext.beginPath();
-    this.fieldContext.rect(0, 30, 60, 300);
+    this.fieldContext.rect(42, 72, 60, 300);
     this.fieldContext.stroke();
     this.fieldContext.closePath();
     // Home goal
     this.fieldContext.beginPath();
-    this.fieldContext.moveTo(1, (height / 2) - 22);
-    this.fieldContext.lineTo(1, (height / 2) + 22);
+    this.fieldContext.rect(6, 144, 36, 156);
     this.fieldContext.stroke();
     this.fieldContext.closePath();
 
     //Home penalty point
     this.fieldContext.beginPath();
-    this.fieldContext.arc(126, height / 2, 3, 0, 2 * Math.PI, true);
+    this.fieldContext.arc(168, height / 2, 3, 0, 2 * Math.PI, true);
     this.fieldContext.fill();
     this.fieldContext.closePath();
 
     //Away goal box
     this.fieldContext.beginPath();
-    this.fieldContext.rect(480 , 30, 60, 300);
+    this.fieldContext.rect(522 , 72, 60, 300);
     this.fieldContext.stroke();
     this.fieldContext.closePath();
     //Away goal
     this.fieldContext.beginPath();
-    this.fieldContext.moveTo(width - 1, (height / 2) - 22);
-    this.fieldContext.lineTo(width - 1, (height / 2) + 22);
+    this.fieldContext.rect(582, 144, 36, 156);
     this.fieldContext.stroke();
     this.fieldContext.closePath();
 
     //Away penalty point
     this.fieldContext.beginPath();
-    this.fieldContext.arc(414, height / 2, 3, 0, 2 * Math.PI, true);
+    this.fieldContext.arc(width - 168, height / 2, 3, 0, 2 * Math.PI, true);
     this.fieldContext.fill();
     this.fieldContext.closePath();
   }
