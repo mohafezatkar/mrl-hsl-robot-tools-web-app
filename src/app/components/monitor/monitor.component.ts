@@ -44,23 +44,23 @@ export class MonitorComponent implements OnInit, AfterViewInit {
     );
     this.ws.onMessage(
       (msg: MessageEvent) => {
-        console.log(msg.data);
         const Time = new Date();
         this.monitorData = [];
         this.monitorData.push(JSON.parse(msg.data));
         if (this.monitorIDs.includes(this.monitorData[0].id)) {
           const monitorArrayIndex = this.monitorIDs.indexOf(this.monitorData[0].id);
+          this.string2label_rle(this.monitorData[0].sendlabelB.arr.data, monitorArrayIndex);
           this.monitorX.splice(monitorArrayIndex, 1, this.monitorData[0].pose.x);
           this.monitorY.splice(monitorArrayIndex, 1, this.monitorData[0].pose.y);
           this.monitorA.splice(monitorArrayIndex, 1, this.monitorData[0].pose.a);
-          this.monitorxBall.splice(monitorArrayIndex, 1, this.monitorData[0].ball.x * 100);
-          this.monitoryBall.splice(monitorArrayIndex, 1, this.monitorData[0].ball.y * 100);
+          this.monitorxBall.splice(monitorArrayIndex, 1, this.monitorData[0].ball.x);
+          this.monitoryBall.splice(monitorArrayIndex, 1, this.monitorData[0].ball.y);
           this.monitorRole.splice(monitorArrayIndex, 1, this.monitorData[0].role);
           this.monitorpBall.splice(monitorArrayIndex, 1, this.monitorData[0].ball.p);
           this.monitorBatteryLevels.splice(monitorArrayIndex, 1, this.monitorData[0].battery_level);
           this.monitorTime.splice(monitorArrayIndex, 1, Time.getTime());
           this.position();
-          this.string2label_rle(this.monitorData[0].sendlabelB.arr.data, monitorArrayIndex);
+
         }
         else {
           this.monitorIDs.push(this.monitorData[0].id);
@@ -137,8 +137,9 @@ export class MonitorComponent implements OnInit, AfterViewInit {
       const yAngle = height / 2 - (this.monitorY[i] * height / 2) / 3.7 - 20 * Math.sin(this.monitorA[i]);
       const ca = Math.cos(this.monitorA[i]);
       const sa = Math.sin(this.monitorA[i]);
-      const xGlobal = (this.monitorX[i] * width / 2) / 5.2 + width / 2  + ca * this.monitorxBall[i] - sa * this.monitoryBall[i];
-      const yGlobal = height / 2 - (this.monitorY[i] * height / 2) / 3.7 - sa * this.monitorxBall[i] - ca * this.monitoryBall[i];
+      const xGlobal = width / 2 + (this.monitorX[i] + ca * this.monitorxBall[i] - sa * this.monitoryBall[i]) * 60;
+      const yGlobal = height/2 + (this.monitorY[i] - sa * this.monitorxBall[i] - ca * this.monitoryBall[i]) * 60;
+      console.log(this.monitorxBall[i], this.monitoryBall[i], xGlobal, yGlobal);
       if (this.monitorRole[i] === 0) {
         this.fieldContext.fillStyle = 'white';
       }
@@ -258,7 +259,7 @@ export class MonitorComponent implements OnInit, AfterViewInit {
     const Time = new Date();
     for (let i = 0; i < this.monitorIDs.length; i++) {
       const checkTime = Time.getTime() - this.monitorTime[i];
-      if (checkTime > 5000) {
+      if (checkTime > 3000) {
         this.monitorIDs.splice(i, 1);
         this.monitorNames.splice(i, 1);
         this.monitorX.splice(i, 1);
