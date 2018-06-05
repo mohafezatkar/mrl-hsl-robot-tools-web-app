@@ -49,7 +49,6 @@ export class MonitorComponent implements OnInit, AfterViewInit {
         this.monitorData.push(JSON.parse(msg.data));
         if (this.monitorIDs.includes(this.monitorData[0].id)) {
           const monitorArrayIndex = this.monitorIDs.indexOf(this.monitorData[0].id);
-          this.string2label_rle(this.monitorData[0].sendlabelB.arr.data, monitorArrayIndex);
           this.monitorX.splice(monitorArrayIndex, 1, this.monitorData[0].pose.x);
           this.monitorY.splice(monitorArrayIndex, 1, this.monitorData[0].pose.y);
           this.monitorA.splice(monitorArrayIndex, 1, this.monitorData[0].pose.a);
@@ -60,7 +59,7 @@ export class MonitorComponent implements OnInit, AfterViewInit {
           this.monitorBatteryLevels.splice(monitorArrayIndex, 1, this.monitorData[0].battery_level);
           this.monitorTime.splice(monitorArrayIndex, 1, Time.getTime());
           this.position();
-
+          this.string2label_rle(this.monitorData[0].sendlabelB.arr.data, monitorArrayIndex);
         }
         else {
           this.monitorIDs.push(this.monitorData[0].id);
@@ -120,7 +119,8 @@ export class MonitorComponent implements OnInit, AfterViewInit {
           contect.fillRect(j, k, 1, 1);
         }
         if (this.imageArray[index] === 16) {
-          contect.fillStyle = 'white';
+          contect.fillStyle = 'white';      console.log(this.monitorX[i] + ca * this.monitorxBall[i] - sa * this.monitoryBall[i], -(this.monitorY[i] + sa * this.monitorxBall[i] + ca * this.monitoryBall[i]));
+
           contect.fillRect(j, k, 1, 1);
         }
       }
@@ -138,8 +138,7 @@ export class MonitorComponent implements OnInit, AfterViewInit {
       const ca = Math.cos(this.monitorA[i]);
       const sa = Math.sin(this.monitorA[i]);
       const xGlobal = width / 2 + (this.monitorX[i] + ca * this.monitorxBall[i] - sa * this.monitoryBall[i]) * 60;
-      const yGlobal = height/2 + (this.monitorY[i] - sa * this.monitorxBall[i] - ca * this.monitoryBall[i]) * 60;
-      console.log(this.monitorxBall[i], this.monitoryBall[i], xGlobal, yGlobal);
+      const yGlobal = height / 2 - (this.monitorY[i] + sa * this.monitorxBall[i] + ca * this.monitoryBall[i]) * 60;
       if (this.monitorRole[i] === 0) {
         this.fieldContext.fillStyle = 'white';
       }
@@ -152,18 +151,18 @@ export class MonitorComponent implements OnInit, AfterViewInit {
       if (this.monitorRole[i] === 3) {
         this.fieldContext.fillStyle = 'blue';
       }
-      if (this.monitorpBall[i].toString().includes('e')){
+      if (this.monitorpBall[i].toString().includes('e')) {
         this.fieldContext.globalAlpha = 0.1;
         this.fieldContext.beginPath();
         this.fieldContext.arc(xGlobal, yGlobal, 10, 0, 2 * Math.PI, true);
         this.fieldContext.fill();
         this.fieldContext.globalAlpha = 1.0;
         this.fieldContext.stroke();
-      }
-      else {
+      } else {
         this.fieldContext.globalAlpha = this.monitorpBall[i];
         this.fieldContext.beginPath();
         this.fieldContext.arc(xGlobal, yGlobal, 10, 0, 2 * Math.PI, true);
+
         this.fieldContext.fill();
         this.fieldContext.globalAlpha = 1.0;
         this.fieldContext.stroke();
@@ -188,7 +187,7 @@ export class MonitorComponent implements OnInit, AfterViewInit {
     const width = 624;
     const height = 444;
     this.fieldContext.beginPath();
-    this.fieldContext.rect(0,0,width,height);
+    this.fieldContext.rect(0, 0, width, height);
     this.fieldContext.stroke();
     this.fieldContext.rect(42, 42, width - 84, height - 84);
     this.fieldContext.fillStyle = '#060';
@@ -231,24 +230,24 @@ export class MonitorComponent implements OnInit, AfterViewInit {
     this.fieldContext.stroke();
     this.fieldContext.closePath();
 
-    //Home penalty point
+    // Home penalty point
     this.fieldContext.beginPath();
     this.fieldContext.arc(168, height / 2, 3, 0, 2 * Math.PI, true);
     this.fieldContext.fill();
     this.fieldContext.closePath();
 
-    //Away goal box
+    // Away goal box
     this.fieldContext.beginPath();
     this.fieldContext.rect(522 , 72, 60, 300);
     this.fieldContext.stroke();
     this.fieldContext.closePath();
-    //Away goal
+    // Away goal
     this.fieldContext.beginPath();
     this.fieldContext.rect(582, 144, 36, 156);
     this.fieldContext.stroke();
     this.fieldContext.closePath();
 
-    //Away penalty point
+    // Away penalty point
     this.fieldContext.beginPath();
     this.fieldContext.arc(width - 168, height / 2, 3, 0, 2 * Math.PI, true);
     this.fieldContext.fill();
@@ -274,6 +273,5 @@ export class MonitorComponent implements OnInit, AfterViewInit {
       }
       this.position();
     }
-    // Inja ke oomadi bayad Time.gettime ro menhaye arrayx ke time toosh rikhti bokoni. age timesh bishtar az 10 saniye bood oonvagh splice konesh.
   }
 }
