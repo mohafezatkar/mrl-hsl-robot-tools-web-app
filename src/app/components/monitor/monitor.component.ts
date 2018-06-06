@@ -10,6 +10,8 @@ import {$WebSocket} from 'angular2-websocket/angular2-websocket';
 export class MonitorComponent implements OnInit, AfterViewInit {
   ws = new $WebSocket('ws://localhost:5056/',
     ['dumb-increment-protocol']);
+  @ViewChild('field') field;
+  @ViewChildren('cmp') can;
   monitorIDs = [];
   monitorData = [];
   monitorNames = [];
@@ -22,19 +24,14 @@ export class MonitorComponent implements OnInit, AfterViewInit {
   monitorpBall = [];
   monitorRole = [];
   monitorTime = [];
-  @ViewChild('field') field;
-  @ViewChildren('cmp') can;
   fieldContext: CanvasRenderingContext2D;
-  fieldImage = new Image(624, 444);
-  xsize;
-  ysize;
   label_color_unpack_lut = [0, 1, 2, 4, 8, 16];
   imageArray = [];
 
 
   constructor() {
     setInterval(() => {
-      this.gettime(); }, 4000);
+      this.gettime(); }, 3000);
     this.ws.onClose(
       () => {
         console.log('WebSocket Closed');
@@ -119,8 +116,7 @@ export class MonitorComponent implements OnInit, AfterViewInit {
           contect.fillRect(j, k, 1, 1);
         }
         if (this.imageArray[index] === 16) {
-          contect.fillStyle = 'white';      console.log(this.monitorX[i] + ca * this.monitorxBall[i] - sa * this.monitoryBall[i], -(this.monitorY[i] + sa * this.monitorxBall[i] + ca * this.monitoryBall[i]));
-
+          contect.fillStyle = 'white';
           contect.fillRect(j, k, 1, 1);
         }
       }
@@ -154,14 +150,14 @@ export class MonitorComponent implements OnInit, AfterViewInit {
       if (this.monitorpBall[i].toString().includes('e')) {
         this.fieldContext.globalAlpha = 0.1;
         this.fieldContext.beginPath();
-        this.fieldContext.arc(xGlobal, yGlobal, 10, 0, 2 * Math.PI, true);
+        this.fieldContext.arc(xGlobal, yGlobal, 8.40, 0, 2 * Math.PI, true);
         this.fieldContext.fill();
         this.fieldContext.globalAlpha = 1.0;
         this.fieldContext.stroke();
       } else {
         this.fieldContext.globalAlpha = this.monitorpBall[i];
         this.fieldContext.beginPath();
-        this.fieldContext.arc(xGlobal, yGlobal, 10, 0, 2 * Math.PI, true);
+        this.fieldContext.arc(xGlobal, yGlobal, 8.40, 0, 2 * Math.PI, true);
 
         this.fieldContext.fill();
         this.fieldContext.globalAlpha = 1.0;
@@ -252,6 +248,9 @@ export class MonitorComponent implements OnInit, AfterViewInit {
     this.fieldContext.arc(width - 168, height / 2, 3, 0, 2 * Math.PI, true);
     this.fieldContext.fill();
     this.fieldContext.closePath();
+
+
+
   }
 
   gettime() {
