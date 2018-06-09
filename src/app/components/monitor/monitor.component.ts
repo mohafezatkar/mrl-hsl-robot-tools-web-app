@@ -129,23 +129,27 @@ export class MonitorComponent implements OnInit, AfterViewInit {
     this.fieldContext.clearRect(0, 0, width, height);
     this.drawField();
     for (let i = 0; i < this.monitorIDs.length; i++) {
-      const xAngle = (this.monitorX[i] * width / 2) / 5.2 + width / 2 + 20 * Math.cos(this.monitorA[i]);
-      const yAngle = height / 2 - (this.monitorY[i] * height / 2) / 3.7 - 20 * Math.sin(this.monitorA[i]);
+      const xAngle = (this.monitorX[i] * width / 2) / 5.2 + width / 2 + 22 * Math.cos(this.monitorA[i]);
+      const yAngle = height / 2 - (this.monitorY[i] * height / 2) / 3.7 - 22 * Math.sin(this.monitorA[i]);
       const ca = Math.cos(this.monitorA[i]);
       const sa = Math.sin(this.monitorA[i]);
       const xGlobal = width / 2 + (this.monitorX[i] + ca * this.monitorxBall[i] - sa * this.monitoryBall[i]) * 60;
       const yGlobal = height / 2 - (this.monitorY[i] + sa * this.monitorxBall[i] + ca * this.monitoryBall[i]) * 60;
       if (this.monitorRole[i] === 0) {
         this.fieldContext.fillStyle = 'white';
+        this.fieldContext.strokeStyle = 'white';
       }
       if (this.monitorRole[i] === 1) {
-        this.fieldContext.fillStyle = 'red';
+        this.fieldContext.fillStyle = '#A00000';
+        this.fieldContext.strokeStyle = '#A00000';
       }
       if (this.monitorRole[i] === 2) {
         this.fieldContext.fillStyle = 'yellow';
+        this.fieldContext.strokeStyle = 'yellow';
       }
       if (this.monitorRole[i] === 3) {
         this.fieldContext.fillStyle = 'blue';
+        this.fieldContext.strokeStyle = 'blue';
       }
       if (this.monitorpBall[i].toString().includes('e')) {
         this.fieldContext.globalAlpha = 0.1;
@@ -158,27 +162,31 @@ export class MonitorComponent implements OnInit, AfterViewInit {
         this.fieldContext.globalAlpha = this.monitorpBall[i];
         this.fieldContext.beginPath();
         this.fieldContext.arc(xGlobal, yGlobal, 8.40, 0, 2 * Math.PI, true);
-
         this.fieldContext.fill();
         this.fieldContext.globalAlpha = 1.0;
         this.fieldContext.stroke();
       }
 
       this.fieldContext.beginPath();
-      this.fieldContext.globalAlpha = 1.0;
-      this.fieldContext.arc((this.monitorX[i] * width / 2) / 5.2 + width / 2,  height / 2 - (this.monitorY[i] * height / 2) / 3.7 , 10, 0, 2 * Math.PI);
-      this.fieldContext.fill();
-      this.fieldContext.beginPath();
       this.fieldContext.moveTo((this.monitorX[i] * width / 2) / 5.2 + width / 2, height / 2 - (this.monitorY[i] * height / 2) / 3.7);
       this.fieldContext.lineTo(xAngle, yAngle);
       this.fieldContext.stroke();
-      this.fieldContext.font = '20px Arial';
+
+      this.fieldContext.beginPath();
+      this.fieldContext.globalAlpha = 1.0;
+      this.fieldContext.arc((this.monitorX[i] * width / 2) / 5.2 + width / 2,  height / 2 - (this.monitorY[i] * height / 2) / 3.7 , 10, 0, 2 * Math.PI);
+      this.fieldContext.fill();
+      this.fieldContext.strokeStyle = 'black';
+      this.fieldContext.stroke();
+
+      this.fieldContext.font = '17px Arial';
       this.fieldContext.fillStyle = 'black';
       this.fieldContext.fillText(this.monitorIDs[i], (this.monitorX[i] * width / 2) / 5.2 + width / 2 - 3.7, height / 2 - (this.monitorY[i] * height / 2) / 3.7 + 7);
     }
   }
 
   drawField(){
+
     // Outer lines
     const width = 624;
     const height = 444;
@@ -202,20 +210,20 @@ export class MonitorComponent implements OnInit, AfterViewInit {
     this.fieldContext.stroke();
     this.fieldContext.closePath();
 
-    //Mid circle
+    // Mid circle
     this.fieldContext.beginPath();
     this.fieldContext.arc(width / 2, height / 2, 45, 0, 2 * Math.PI, false);
     this.fieldContext.stroke();
     this.fieldContext.closePath();
 
-    //Mid point
+    // Mid point
     this.fieldContext.beginPath();
     this.fieldContext.arc(width / 2, height / 2, 3, 0, 2 * Math.PI, false);
     this.fieldContext.fill();
     this.fieldContext.closePath();
 
 
-    //Home goal box
+    // Home goal box
     this.fieldContext.beginPath();
     this.fieldContext.rect(42, 72, 60, 300);
     this.fieldContext.stroke();
