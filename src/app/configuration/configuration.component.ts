@@ -1,12 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {$WebSocket, WebSocketSendMode} from 'angular2-websocket/angular2-websocket';
 
+
 @Component({
-  selector: 'app-config',
-  templateUrl: './config.component.html',
-  styleUrls: ['./config.component.css']
+  selector: 'app-configuration',
+  templateUrl: './configuration.component.html',
+  styleUrls: ['./configuration.component.scss']
 })
-export class ConfigComponent{
+export class ConfigurationComponent{
+
   ws = new $WebSocket('ws://localhost:1234/');
   configData = [];
   configDataCounter = 0;
@@ -17,6 +19,7 @@ export class ConfigComponent{
   currentValue = [];
   newValue = '';
   fileIndex = 0;
+
   constructor() {
     this.ws.onMessage(
       (msg: MessageEvent) => {
@@ -92,3 +95,7 @@ export class ConfigComponent{
   }
 
 }
+
+
+
+

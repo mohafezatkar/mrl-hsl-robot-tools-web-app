@@ -19,11 +19,11 @@
         <input matInput [(ngModel)]="this.config[j].value" placeholder="{{this.config[j].key}}">
       </mat-form-field>
       <mat-form-field *ngIf = "this.config[j].tag === 4">
-      <mat-select placeholder="{{this.config[j].key}}" [(ngModel)]="this.currentValue[this.j]">
-        <mat-option  *ngFor="let count of this.optionValue[this.j]" [value] = "count">
-          {{count}}
-        </mat-option>
-      </mat-select>
+        <mat-select placeholder="{{this.config[j].key}}" [(ngModel)]="this.currentValue[this.j]">
+          <mat-option  *ngFor="let count of this.optionValue[this.j]" [value] = "count">
+            {{count}}
+          </mat-option>
+        </mat-select>
       </mat-form-field>
     </mat-list>
   </mat-tab>

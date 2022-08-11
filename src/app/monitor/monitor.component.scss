@@ -1,0 +1,20 @@
+.container{
+  display: flex;
+  width: 100%;
+  height: auto;
+}
+
+.field-play{
+  margin: 20px;
+}
+
+@media screen and (max-width: 780px) {
+
+  .field-play{
+    width: 320px;
+    flex-direction: row;
+    justify-content: center; /* align items vertically, in this case */
+    align-items: center;
+  }
+
+}
