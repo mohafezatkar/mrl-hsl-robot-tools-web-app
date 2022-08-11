@@ -1,13 +1,22 @@
 <mat-toolbar color="accent">
   <span>Robot Tools</span>
   <button mat-button="Home" [routerLink] = "['/']" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-    Home
+    <fa-icon [icon]="faHouse"></fa-icon> Home
   </button>
   <button mat-button="Monitor" [routerLink] = "['monitor']" routerLinkActive="active">
-    Monitor
+    <fa-icon [icon]="faTvAlt"></fa-icon> Monitor
   </button>
   <button mat-button="Config" [routerLink] = "['config']" routerLinkActive="active">
-    Config
+    <fa-icon [icon]="faGears"></fa-icon> Config
+  </button>
+  <button mat-button="Config" [routerLink] = "['terminal']" routerLinkActive="active">
+    <fa-icon [icon]="faTerminal"></fa-icon> Terminal
+  </button>
+  <button mat-button="State Machines" [routerLink] = "['terminal']" routerLinkActive="active">
+    <fa-icon [icon]="faDiagram"></fa-icon> State Machines
+  </button>
+  <button mat-button="Plots" [routerLink] = "['terminal']" routerLinkActive="active">
+    <fa-icon [icon]="faChartLine"></fa-icon> Plots
   </button>
 </mat-toolbar>
 

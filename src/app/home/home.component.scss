@@ -1,0 +1,61 @@
+h1 {
+  font-family: Georgia;
+  font-size: 60px;
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 50px;
+}
+
+p{
+  font-family: 'Lato', sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 25px;
+  padding: 50px;
+}
+
+img{
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+    transform: rotate(5deg);
+}
+
+.sec1, .sec2{
+  text-align:center;
+  margin: auto;
+}
+
+.first-btn :hover{
+  background-color: #4cac7e;
+}
+
+.second-btn :hover{
+  background-color: #ececc9;
+}
+
+@media screen and (max-width: 600px) {
+  img{
+    max-width: 280px;
+    margin: 50px;
+  }
+
+  .sec1 p{
+    font-size: 20px;
+    margin-top: 10px;
+  }
+
+  .sec1 h1{
+    font-size: 35px;
+    margin-bottom:  10px;
+    margin-top: 25px;
+  }
+}
+
+@media screen and (max-width: 532px) {
+  img{
+    width: 50%;
+    height: auto;
+    margin-top: 200px;
+  }
+}

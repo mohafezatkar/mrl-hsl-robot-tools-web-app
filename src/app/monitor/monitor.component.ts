@@ -1,12 +1,11 @@
-import {Component, OnInit, ViewChild, ViewChildren, AfterViewInit} from '@angular/core';
-import {$WebSocket} from 'angular2-websocket/angular2-websocket';
+import { Component, OnInit, ViewChild, ViewChildren, AfterViewInit } from '@angular/core';
+import { $WebSocket } from 'angular2-websocket/angular2-websocket';
 
 @Component({
   selector: 'app-monitor',
   templateUrl: './monitor.component.html',
-  styleUrls: ['./monitor.component.css']
+  styleUrls: ['./monitor.component.scss']
 })
-
 export class MonitorComponent implements OnInit, AfterViewInit {
   ws = new $WebSocket('ws://localhost:5056/',
     ['dumb-increment-protocol']);
@@ -31,7 +30,8 @@ export class MonitorComponent implements OnInit, AfterViewInit {
 
   constructor() {
     setInterval(() => {
-      this.gettime(); }, 3000);
+      this.gettime();
+    }, 3000);
     this.ws.onClose(
       () => {
         console.log('WebSocket Closed');
@@ -124,8 +124,8 @@ export class MonitorComponent implements OnInit, AfterViewInit {
   }
 
   position() {
-    const width = 624;
-    const height = 444;
+    const width = 660;
+    const height = 480;
     this.fieldContext.clearRect(0, 0, width, height);
     this.drawField();
     for (let i = 0; i < this.monitorIDs.length; i++) {
@@ -174,7 +174,7 @@ export class MonitorComponent implements OnInit, AfterViewInit {
 
       this.fieldContext.beginPath();
       this.fieldContext.globalAlpha = 1.0;
-      this.fieldContext.arc((this.monitorX[i] * width / 2) / 5.2 + width / 2,  height / 2 - (this.monitorY[i] * height / 2) / 3.7 , 10, 0, 2 * Math.PI);
+      this.fieldContext.arc((this.monitorX[i] * width / 2) / 5.2 + width / 2, height / 2 - (this.monitorY[i] * height / 2) / 3.7, 10, 0, 2 * Math.PI);
       this.fieldContext.fill();
       this.fieldContext.strokeStyle = 'black';
       this.fieldContext.stroke();
@@ -185,15 +185,15 @@ export class MonitorComponent implements OnInit, AfterViewInit {
     }
   }
 
-  drawField(){
-
+  drawField() {
+    //The Real Scale is = 0.6
     // Outer lines
-    const width = 624;
-    const height = 444;
+    const width = 660;
+    const height = 480;
     this.fieldContext.beginPath();
     this.fieldContext.rect(0, 0, width, height);
     this.fieldContext.stroke();
-    this.fieldContext.rect(42, 42, width - 84, height - 84);
+    this.fieldContext.rect(60, 60, width - 120, height - 120);
     this.fieldContext.fillStyle = '#060';
     this.fieldContext.fill();
     this.fieldContext.lineWidth = 3;
@@ -205,8 +205,8 @@ export class MonitorComponent implements OnInit, AfterViewInit {
 
     // Mid line
     this.fieldContext.beginPath();
-    this.fieldContext.moveTo(width / 2, 42);
-    this.fieldContext.lineTo(width / 2, height - 42);
+    this.fieldContext.moveTo(width / 2, 60);
+    this.fieldContext.lineTo(width / 2, height - 60);
     this.fieldContext.stroke();
     this.fieldContext.closePath();
 
@@ -223,42 +223,53 @@ export class MonitorComponent implements OnInit, AfterViewInit {
     this.fieldContext.closePath();
 
 
-    // Home goal box
+    // Home penalty area
     this.fieldContext.beginPath();
-    this.fieldContext.rect(42, 72, 60, 300);
+    this.fieldContext.rect(60, 90, 120, 300);
     this.fieldContext.stroke();
     this.fieldContext.closePath();
+
+    // Home goal area
+    this.fieldContext.beginPath();
+    this.fieldContext.rect(60, 150, 60, 180);
+    this.fieldContext.stroke();
+    this.fieldContext.closePath();
+
     // Home goal
     this.fieldContext.beginPath();
-    this.fieldContext.rect(6, 144, 36, 156);
+    this.fieldContext.rect(24, 162, 36, 156);
     this.fieldContext.stroke();
     this.fieldContext.closePath();
 
     // Home penalty point
     this.fieldContext.beginPath();
-    this.fieldContext.arc(168, height / 2, 3, 0, 2 * Math.PI, true);
+    this.fieldContext.arc(150, height / 2, 3, 0, 2 * Math.PI, true);
     this.fieldContext.fill();
     this.fieldContext.closePath();
 
-    // Away goal box
+    // Away penalty area
     this.fieldContext.beginPath();
-    this.fieldContext.rect(522 , 72, 60, 300);
+    this.fieldContext.rect(480, 90, 120, 300);
     this.fieldContext.stroke();
     this.fieldContext.closePath();
+
+    // Away goal area
+    this.fieldContext.beginPath();
+    this.fieldContext.rect(540, 150, 60, 180);
+    this.fieldContext.stroke();
+    this.fieldContext.closePath();
+
     // Away goal
     this.fieldContext.beginPath();
-    this.fieldContext.rect(582, 144, 36, 156);
+    this.fieldContext.rect(600, 162, 36, 156);
     this.fieldContext.stroke();
     this.fieldContext.closePath();
 
     // Away penalty point
     this.fieldContext.beginPath();
-    this.fieldContext.arc(width - 168, height / 2, 3, 0, 2 * Math.PI, true);
+    this.fieldContext.arc(510, height / 2, 3, 0, 2 * Math.PI, true);
     this.fieldContext.fill();
     this.fieldContext.closePath();
-
-
-
   }
 
   gettime() {
@@ -282,3 +293,4 @@ export class MonitorComponent implements OnInit, AfterViewInit {
     }
   }
 }
+

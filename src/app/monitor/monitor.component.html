@@ -1,0 +1,14 @@
+<div class="container">
+  <div>
+    <canvas #field width="660" height="480" class="field-play"></canvas>
+  </div>
+  <div fxFlex="50">
+    <mat-grid-list cols="4" rowHeight="160">
+      <mat-grid-tile *ngFor="let monitor of monitorIDs;let i=index" #cmp>
+        <canvas width="80" height="60" #{{i}}>Canvas</canvas>
+        <mat-grid-tile-header>ID: {{this.monitorIDs[i]}}<br>Robot Name: {{this.monitorNames[i]}}</mat-grid-tile-header>
+        <mat-grid-tile-footer>Battery Level: {{this.monitorBatteryLevels[i]}}</mat-grid-tile-footer>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </div>
+</div>
